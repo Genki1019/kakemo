@@ -42,7 +42,7 @@ struct AddExpenseView: View {
                             Image(systemName: "chevron.left")
                         }
                         Spacer()
-                        Text(dateString)
+                        Text(date.dayTitleString)
                             .font(.headline)
                         Spacer()
                         Button {
