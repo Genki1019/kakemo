@@ -16,6 +16,8 @@ struct AddExpenseView: View {
     
     @State private var date = Date()
     @State private var amount = 0
+    @State private var amountText: String = "0"
+    @FocusState private var isFocused: Bool
     @State private var memo = ""
     
     @State private var selectedCategoryId: ObjectId?
@@ -62,10 +64,39 @@ struct AddExpenseView: View {
                         HStack {
                             Text("支出")
                                 .padding(.trailing, 16)
-                            TextField("", value: $amount, format: .number)
-                                .keyboardType(.numberPad)
-                                .multilineTextAlignment(.leading)
-                                .font(.title)
+                            
+                            TextField("", text: Binding(
+                                get: { amountText },
+                                set: { newValue in
+                                    // 入力値から数字だけを抽出
+                                    let filtered = newValue.filter { $0.isNumber }
+                                    amountText = filtered
+                                    
+                                    // 数字があれば Int に反映
+                                    if let value = Int(filtered) {
+                                        amount = value
+                                    } else {
+                                        amount = 0
+                                    }
+                                }
+                            ))
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.leading)
+                            .font(.title)
+                            .focused($isFocused)
+                            .onChange(of: isFocused) {
+                                if isFocused {
+                                    if amount == 0 {
+                                        amountText = ""
+                                    }
+                                } else {
+                                    if amountText.isEmpty {
+                                        amount = 0
+                                        amountText = "0"
+                                    }
+                                }
+                            }
+                            
                             Text("円")
                         }
                         .padding(.horizontal)
@@ -162,6 +193,7 @@ struct AddExpenseView: View {
             // リセット
             date = Date()
             amount = 0
+            amountText = "0"
             memo = ""
             selectedCategoryId = nil
             selectedPaymentMethodId = nil
