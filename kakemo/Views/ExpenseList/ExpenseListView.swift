@@ -40,7 +40,7 @@ struct ExpenseListView: View {
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: AddExpenseView()) {
+                    NavigationLink(destination: ExpenseFormView()) {
                         Image(systemName: "plus")
                     }
                 }

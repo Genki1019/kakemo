@@ -1,5 +1,5 @@
 //
-//  AddExenseView.swift
+//  ExenseFormView.swift
 //  kakemo
 //
 //  Created by Genki Yamamoto on 2025/09/05.
@@ -8,30 +8,33 @@
 import SwiftUI
 import RealmSwift
 
-struct AddExpenseView: View {
+struct ExpenseFormView: View {
     @Environment(\.dismiss) var dismiss
+    
+    var editingExpense: Expense?
     
     @ObservedResults(Category.self) var categories
     @ObservedResults(PaymentMethod.self) var paymentMethods
     
-    @State private var date = Date()
-    @State private var amount = 0
-    @State private var amountText: String = "0"
-    @FocusState private var isFocused: Bool
-    @State private var memo = ""
-    
+    @State private var date: Date
+    @State private var amount: Int
+    @State private var amountText: String
+    @State private var memo: String
     @State private var selectedCategoryId: ObjectId?
     @State private var selectedPaymentMethodId: ObjectId?
     
+    @FocusState private var isFocused: Bool
     @State private var isCompleted = false
-
-    private var dateString: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ja_JP")
-        formatter.dateFormat = "yyyy年M月d日(E)"
-        return formatter.string(from: date)
+    
+    init(editingExpense: Expense? = nil) {
+        self.editingExpense = editingExpense
+        _date = State(initialValue: editingExpense?.date ?? Date())
+        _amount = State(initialValue: editingExpense?.amount ?? 0)
+        _amountText = State(initialValue: "\(editingExpense?.amount ?? 0)")
+        _memo = State(initialValue: editingExpense?.memo ?? "")
+        _selectedCategoryId = State(initialValue: editingExpense?.category?.id)
+        _selectedPaymentMethodId = State(initialValue: editingExpense?.paymentMethod?.id)
     }
-
     
     var body: some View {
         NavigationView {
@@ -132,10 +135,11 @@ struct AddExpenseView: View {
                         
                         Divider()
                         
-                        Button(action: { saveExpense(date) }) {
-                            Text("保存")
+                        Button(action: saveExpense) {
+                            Text(editingExpense == nil ? "登録" : "上書き")
                                 .frame(maxWidth: .infinity)
                                 .foregroundColor(.white)
+                                .fontWeight(.bold)
                                 .padding()
                                 .background(Color.accentColor)
                                 .cornerRadius(8)
@@ -151,7 +155,7 @@ struct AddExpenseView: View {
                             .resizable()
                             .frame(width: 80, height: 80)
                             .padding(.bottom)
-                        Text("登録が完了しました")
+                        Text(editingExpense == nil ? "登録が完了しました" : "上書きしました")
                             .font(.headline)
                     }
                     .padding(50)
@@ -161,50 +165,59 @@ struct AddExpenseView: View {
                     .transition(.scale.combined(with: .opacity))
                 }
             }
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                    }
-                }
-            }
         }
     }
     
-    private func saveExpense(_ saveDate: Date) {
+    private func saveExpense() {
         do {
             let realm = try Realm()
             try realm.write {
-                let expense = Expense()
-                expense.date = saveDate
-                expense.amount = amount
-                if let cid = selectedCategoryId {
-                    expense.category = realm.object(ofType: Category.self, forPrimaryKey: cid)
+                if let editingExpense, let thawed = editingExpense.thaw() {
+                    // 編集モード
+                    thawed.date = date
+                    thawed.amount = amount
+                    if let cid = selectedCategoryId {
+                        thawed.category = realm.object(ofType: Category.self, forPrimaryKey: cid)
+                    }
+                    if let pid = selectedPaymentMethodId {
+                        thawed.paymentMethod = realm.object(ofType: PaymentMethod.self, forPrimaryKey: pid)
+                    }
+                    thawed.memo = memo
+                } else {
+                    // 新規作成モード
+                    let expense = Expense()
+                    expense.date = date
+                    expense.amount = amount
+                    if let cid = selectedCategoryId {
+                        expense.category = realm.object(ofType: Category.self, forPrimaryKey: cid)
+                    }
+                    if let pid = selectedPaymentMethodId {
+                        expense.paymentMethod = realm.object(ofType: PaymentMethod.self, forPrimaryKey: pid)
+                    }
+                    expense.memo = memo
+                    realm.add(expense)
                 }
-                if let pid = selectedPaymentMethodId {
-                    expense.paymentMethod = realm.object(ofType: PaymentMethod.self, forPrimaryKey: pid)
-                }
-                expense.memo = memo
-                
-                realm.add(expense)
             }
-            
-            // リセット
-            date = Date()
-            amount = 0
-            amountText = "0"
-            memo = ""
-            selectedCategoryId = nil
-            selectedPaymentMethodId = nil
             
             withAnimation {
                 isCompleted = true
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 withAnimation {
                     isCompleted = false
+                }
+                // 編集モードのときは前の画面へ
+                if editingExpense != nil {
+                    dismiss()
+                } else {
+                    // 新規登録のときだけリセット
+                    date = Date()
+                    amount = 0
+                    amountText = "0"
+                    memo = ""
+                    selectedCategoryId = nil
+                    selectedPaymentMethodId = nil
                 }
             }
         } catch {
@@ -214,5 +227,5 @@ struct AddExpenseView: View {
 }
 
 #Preview {
-    AddExpenseView()
+    ExpenseFormView()
 }

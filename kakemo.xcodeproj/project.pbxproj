@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CBC46B312E70704000DD538E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CBC46B302E70704000DD538E /* RealmSwift */; };
+		CB5CC7862E70F25C00626761 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB5CC7852E70F25C00626761 /* RealmSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBC46B312E70704000DD538E /* RealmSwift in Frameworks */,
+				CB5CC7862E70F25C00626761 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +78,7 @@
 			);
 			name = kakemo;
 			packageProductDependencies = (
-				CBC46B302E70704000DD538E /* RealmSwift */,
+				CB5CC7852E70F25C00626761 /* RealmSwift */,
 			);
 			productName = kakemo;
 			productReference = CBF3A9942E6AE9F8009CFE17 /* kakemo.app */;
@@ -109,7 +109,7 @@
 			mainGroup = CBF3A98B2E6AE9F8009CFE17;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */,
+				CB5CC7822E70F25C00626761 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CBF3A9952E6AE9F8009CFE17 /* Products */;
@@ -349,7 +349,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+		CB5CC7822E70F25C00626761 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
@@ -360,9 +360,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CBC46B302E70704000DD538E /* RealmSwift */ = {
+		CB5CC7852E70F25C00626761 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */;
+			package = CB5CC7822E70F25C00626761 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
