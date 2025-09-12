@@ -1,17 +1,17 @@
 //
-//  CategoryFormView.swift
+//  PaymentMethodFormView.swift
 //  kakemo
 //
-//  Created by Genki Yamamoto on 2025/09/12.
+//  Created by Genki Yamamoto on 2025/09/13.
 //
 
 import SwiftUI
 import RealmSwift
 
-struct CategoryFormView: View {
+struct PaymentMethodFormView: View {
     @Environment(\.dismiss) var dismiss
     
-    var editingCategory: Category?
+    var editingPaymentMethod: PaymentMethod?
     
     @State private var name: String
     @State private var selectedIcon: String?
@@ -20,11 +20,11 @@ struct CategoryFormView: View {
     
     @State private var isCompleted = false
     
-    init(editingCategory: Category? = nil) {
-        self.editingCategory = editingCategory
-        _name = State(initialValue: editingCategory?.name ?? "")
-        _selectedIcon = State(initialValue: editingCategory?.iconName)
-        _selectedColor = State(initialValue: editingCategory?.colorHex)
+    init(editingPaymentMethod: PaymentMethod? = nil) {
+        self.editingPaymentMethod = editingPaymentMethod
+        _name = State(initialValue: editingPaymentMethod?.name ?? "")
+        _selectedIcon = State(initialValue: editingPaymentMethod?.iconName)
+        _selectedColor = State(initialValue: editingPaymentMethod?.colorHex)
     }
     
     var body: some View {
@@ -41,7 +41,6 @@ struct CategoryFormView: View {
                 // アイコン
                 VStack(alignment: .leading) {
                     Text("アイコン").font(.headline)
-                    
                     ScrollView(.vertical, showsIndicators: true) {
                         IconSelectionView(selectedIcon: $selectedIcon)
                     }
@@ -51,7 +50,6 @@ struct CategoryFormView: View {
                 // カラー
                 VStack(alignment: .leading) {
                     Text("カラー").font(.headline)
-                    
                     ScrollView(.vertical, showsIndicators: true) {
                         ColorSelectionView(selectedColor: $selectedColor, showColorPicker: $showColorPicker)
                     }
@@ -69,8 +67,8 @@ struct CategoryFormView: View {
                 }
                 
                 // 保存ボタン
-                Button(action: saveCategory) {
-                    Text(editingCategory == nil ? "保存" : "更新")
+                Button(action: savePaymentMethod) {
+                    Text(editingPaymentMethod == nil ? "保存" : "更新")
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.white)
                         .padding()
@@ -80,7 +78,7 @@ struct CategoryFormView: View {
             }
             .padding()
         }
-        .navigationBarTitle(editingCategory == nil ? "カテゴリ追加" : "カテゴリ編集")
+        .navigationBarTitle(editingPaymentMethod == nil ? "支払い方法追加" : "支払い方法編集")
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -97,7 +95,7 @@ struct CategoryFormView: View {
                             .resizable()
                             .frame(width: 80, height: 80)
                             .padding(.bottom)
-                        Text(editingCategory == nil ? "登録が完了しました" : "上書きしました")
+                        Text(editingPaymentMethod == nil ? "登録が完了しました" : "上書きしました")
                             .font(.headline)
                     }
                     .padding(50)
@@ -110,34 +108,30 @@ struct CategoryFormView: View {
         )
     }
     
-    private func saveCategory() {
+    private func savePaymentMethod() {
         do {
             let realm = try Realm()
             try realm.write {
-                if let editingCategory, let thawed = editingCategory.thaw() {
+                if let editingPaymentMethod, let thawed = editingPaymentMethod.thaw() {
                     // 編集
                     thawed.name = name
                     thawed.iconName = selectedIcon ?? "star"
                     thawed.colorHex = selectedColor ?? "#000000"
                 } else {
                     // 新規
-                    let category = Category()
-                    category.name = name
-                    category.iconName = selectedIcon ?? "star"
-                    category.colorHex = selectedColor ?? "#000000"
-                    category.order = realm.objects(Category.self).count + 1
-                    realm.add(category)
+                    let paymentMethod = PaymentMethod()
+                    paymentMethod.name = name
+                    paymentMethod.iconName = selectedIcon ?? "star"
+                    paymentMethod.colorHex = selectedColor ?? "#000000"
+                    paymentMethod.order = realm.objects(PaymentMethod.self).count + 1
+                    realm.add(paymentMethod)
                 }
             }
             
-            withAnimation {
-                isCompleted = true
-            }
+            withAnimation { isCompleted = true }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                withAnimation {
-                    isCompleted = false
-                }
+                withAnimation { isCompleted = false }
                 dismiss()
             }
         } catch {
@@ -146,6 +140,3 @@ struct CategoryFormView: View {
     }
 }
 
-#Preview {
-    CategoryFormView()
-}
