@@ -19,6 +19,7 @@ struct ExpenseDaySectionView: View {
                 NavigationLink(destination: ExpenseFormView(editingExpense: expense)) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
+                            // カテゴリ
                             if let category = expense.category {
                                 HStack(spacing: 4) {
                                     Image(systemName: category.iconName)
@@ -33,6 +34,7 @@ struct ExpenseDaySectionView: View {
                                 }
                             }
                             
+                            // 支払い方法
                             if let payment = expense.paymentMethod {
                                 HStack(spacing: 4) {
                                     Image(systemName: payment.iconName)
