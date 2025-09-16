@@ -42,7 +42,7 @@ struct PaymentMethodFormView: View {
                 VStack(alignment: .leading) {
                     Text("アイコン").font(.headline)
                     ScrollView(.vertical, showsIndicators: true) {
-                        IconSelectionView(selectedIcon: $selectedIcon)
+                        IconSelectionView(selectedIcon: $selectedIcon, icons: PaymentMethodOptions.icons)
                     }
                     .frame(maxHeight: 240)
                 }

@@ -9,12 +9,13 @@ import SwiftUI
 
 struct IconSelectionView: View {
     @Binding var selectedIcon: String?
+    let icons: [String]
     
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
     
     var body: some View {
         LazyVGrid(columns: columns, spacing: 12) {
-            ForEach(CategoryOptions.icons, id: \.self) { icon in
+            ForEach(icons, id: \.self) { icon in
                 Button {
                     selectedIcon = icon
                 } label: {

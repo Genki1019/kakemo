@@ -43,7 +43,7 @@ struct CategoryFormView: View {
                     Text("アイコン").font(.headline)
                     
                     ScrollView(.vertical, showsIndicators: true) {
-                        IconSelectionView(selectedIcon: $selectedIcon)
+                        IconSelectionView(selectedIcon: $selectedIcon, icons: CategoryOptions.icons)
                     }
                     .frame(maxHeight: 240)
                 }
@@ -144,8 +144,4 @@ struct CategoryFormView: View {
             print("Realm error:", error.localizedDescription)
         }
     }
-}
-
-#Preview {
-    CategoryFormView()
 }
