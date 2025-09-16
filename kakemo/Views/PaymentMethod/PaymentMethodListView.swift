@@ -15,20 +15,14 @@ struct PaymentMethodListView: View {
     var body: some View {
         List {
             Section {
-                NavigationLink(destination: AddPaymentMethodView()) {
+                NavigationLink(destination: PaymentMethodFormView()) {
                     Label("新規支払い方法を追加", systemImage: "plus.circle")
                 }
             }
             
             Section {
-                ForEach(Array(paymentMethods), id: \.id) { paymentMethod in
-                    NavigationLink(destination: EditPaymentMethodView(paymentMethod: paymentMethod)) {
-                        HStack {
-                            Image(systemName: paymentMethod.iconName)
-                                .foregroundColor(Color(hex: paymentMethod.colorHex))
-                            Text(paymentMethod.name)
-                        }
-                    }
+                ForEach(paymentMethods, id: \.id) { paymentMethod in
+                    paymentMethodRow(paymentMethod)
                 }
                 .onDelete(perform: deletePaymentMethod)
                 .onMove(perform: movePaymentMethod)
@@ -44,6 +38,16 @@ struct PaymentMethodListView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
+            }
+        }
+    }
+    
+    private func paymentMethodRow(_ paymentMethod: PaymentMethod) -> some View {
+        NavigationLink(destination: PaymentMethodFormView(editingPaymentMethod: paymentMethod)) {
+            HStack {
+                Image(systemName: paymentMethod.iconName)
+                    .foregroundColor(Color(hex: paymentMethod.colorHex))
+                Text(paymentMethod.name)
             }
         }
     }

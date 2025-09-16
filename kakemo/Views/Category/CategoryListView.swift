@@ -15,20 +15,14 @@ struct CategoryListView: View {
     var body: some View {
         List {
             Section {
-                NavigationLink(destination: AddCategoryView()) {
+                NavigationLink(destination: CategoryFormView()) {
                     Label("新規カテゴリを追加", systemImage: "plus.circle")
                 }
             }
             
             Section {
-                ForEach(Array(categories), id: \.id) { category in
-                    NavigationLink(destination: EditCategoryView(category: category)) {
-                        HStack {
-                            Image(systemName: category.iconName)
-                                .foregroundColor(Color(hex: category.colorHex))
-                            Text(category.name)
-                        }
-                    }
+                ForEach(categories, id: \.id) { category in
+                    categoryRow(category)
                 }
                 .onDelete(perform: deleteCategory)
                 .onMove(perform: moveCategory)
@@ -44,6 +38,16 @@ struct CategoryListView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
+            }
+        }
+    }
+    
+    private func categoryRow(_ category: Category) -> some View {
+        NavigationLink(destination: CategoryFormView(editingCategory: category)) {
+            HStack {
+                Image(systemName: category.iconName)
+                    .foregroundColor(Color(hex: category.colorHex))
+                Text(category.name)
             }
         }
     }

@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct ExpenseDaySectionView: View {
     let date: Date
     let items: [Expense]
+    var onDelete: (IndexSet) -> Void
     
     var body: some View {
         Section(header: Text(date.dayTitleString)) {
-            ForEach(items) { expense in
-                VStack(alignment: .leading) {
+            ForEach(items, id: \.id) { expense in
+                NavigationLink(destination: ExpenseFormView(editingExpense: expense)) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             // カテゴリ
@@ -27,7 +29,7 @@ struct ExpenseDaySectionView: View {
                             } else {
                                 HStack(spacing: 4) {
                                     Image(systemName: "circle")
-                                        .foregroundColor(Color.gray)
+                                        .foregroundColor(.gray)
                                     Text("カテゴリなし")
                                 }
                             }
@@ -42,26 +44,26 @@ struct ExpenseDaySectionView: View {
                             } else {
                                 HStack(spacing: 4) {
                                     Image(systemName: "circle.fill")
-                                        .foregroundColor(Color.gray)
+                                        .foregroundColor(.gray)
                                     Text("支払い方法なし")
                                 }
                             }
+                            
+                            if let memo = expense.memo, !memo.isEmpty {
+                                Text("(\(memo))")
+                                    .font(.subheadline)
+                                    .fontWeight(.light)
+                            }
                         }
-                        .font(.headline)
                         
                         Spacer()
-                        
                         Text("¥\(expense.amount)")
                             .font(.title2)
                     }
-                    
-                    if let memo = expense.memo, !memo.isEmpty {
-                        Text("(\(memo))")
-                            .font(.subheadline)
-                            .fontWeight(.light)
-                    }
+                    .font(.headline)
                 }
             }
+            .onDelete(perform: onDelete)
         }
     }
 }

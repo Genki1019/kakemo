@@ -17,10 +17,13 @@ struct ExpenseListView: View {
     var body: some View {
         NavigationView {
             VStack {
+                // ヘッダー
                 HeaderView(selectedMonth: selectedMonth, monthlyTotal: monthlyTotal, onChangeMonth: changeMonth)
                 
+                // カレンダー
                 CalendarView(selectedMonth: selectedMonth, totals: dailyTotals(for: selectedMonth))
             
+                // 月ごと支出合計
                 HStack {
                     Text("合計支出: ")
                         .font(.headline)
@@ -32,15 +35,28 @@ struct ExpenseListView: View {
                 
                 List {
                     ForEach(groupExpensesByDay(expenses: expenses), id: \.date) { section in
-                        ExpenseDaySectionView(date: section.date, items: section.items)
+                        ExpenseDaySectionView(
+                            date: section.date,
+                            items: Array(section.items),
+                            onDelete: { indexSet in
+                                let realm = try! Realm()
+                                try! realm.write {
+                                    indexSet.forEach { index in
+                                        let expenseToDelete = section.items[index]
+                                        if let managed = realm.object(ofType: Expense.self, forPrimaryKey: expenseToDelete.id) {
+                                            realm.delete(managed)
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     }
-                    .onDelete(perform: $expenses.remove)
                 }
             }
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: AddExpenseView()) {
+                    NavigationLink(destination: ExpenseFormView()) {
                         Image(systemName: "plus")
                     }
                 }

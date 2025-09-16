@@ -350,7 +350,7 @@
 
 /* Begin XCRemoteSwiftPackageReference section */
 		CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
+    isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
 				branch = master;

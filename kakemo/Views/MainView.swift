@@ -10,7 +10,7 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         TabView {
-            AddExpenseView()
+            ExpenseFormView()
                 .tabItem {
                     Label("入力", systemImage: "pencil")
                 }
