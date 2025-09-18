@@ -18,7 +18,7 @@ struct ExpenseListView: View {
         NavigationView {
             VStack {
                 // ヘッダー
-                HeaderView(selectedMonth: selectedMonth, monthlyTotal: monthlyTotal, onChangeMonth: changeMonth)
+                HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth)
                 
                 // カレンダー
                 CalendarView(selectedMonth: selectedMonth, totals: dailyTotals(for: selectedMonth))

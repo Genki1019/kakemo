@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HeaderView: View {
     var selectedMonth: Date
-    var monthlyTotal: Int
     var onChangeMonth: (Int) -> Void
     
     
