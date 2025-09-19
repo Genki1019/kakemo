@@ -63,6 +63,11 @@ struct PaymentMethodPickerView: View {
         }
         .padding(6)
         .frame(maxHeight: 200)
+        .onAppear {
+            if selectedId == nil, let first = paymentMethods.first {
+                selectedId = first.id
+            }
+        }
     }
 }
 

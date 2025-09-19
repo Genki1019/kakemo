@@ -63,6 +63,11 @@ struct CategoryPickerView: View {
         }
         .padding(6)
         .frame(maxHeight: 200)
+        .onAppear {
+            if selectedId == nil, let first = categories.first {
+                selectedId = first.id
+            }
+        }
     }
 }
 
