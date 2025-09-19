@@ -27,7 +27,7 @@ struct PaymentMethodPickerView: View {
                                 .foregroundColor(Color(hex: pm.colorHex))
                             Text(pm.name)
                                 .font(.caption)
-                                .foregroundColor(Color(hex: pm.colorHex))
+                                .foregroundColor(.secondary)
                         }
                         .padding(6)
                         .frame(maxWidth: .infinity)
@@ -47,10 +47,10 @@ struct PaymentMethodPickerView: View {
                         Image(systemName: "ellipsis.circle")
                             .font(.title2)
                             .frame(width:44, height:32)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.secondary)
                         Text("編集")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.secondary)
                     }
                     .padding(6)
                     .frame(maxWidth: .infinity)
@@ -63,6 +63,11 @@ struct PaymentMethodPickerView: View {
         }
         .padding(6)
         .frame(maxHeight: 200)
+        .onAppear {
+            if selectedId == nil, let first = paymentMethods.first {
+                selectedId = first.id
+            }
+        }
     }
 }
 

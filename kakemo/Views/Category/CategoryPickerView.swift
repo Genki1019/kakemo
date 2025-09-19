@@ -27,7 +27,7 @@ struct CategoryPickerView: View {
                                 .foregroundColor(Color(hex: cat.colorHex))
                             Text(cat.name)
                                 .font(.caption)
-                                .foregroundColor(Color(hex: cat.colorHex))
+                                .foregroundColor(.secondary)
                         }
                         .padding(6)
                         .frame(maxWidth: .infinity)
@@ -47,10 +47,10 @@ struct CategoryPickerView: View {
                         Image(systemName: "ellipsis.circle")
                             .font(.title2)
                             .frame(width:44, height:32)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.secondary)
                         Text("編集")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.secondary)
                     }
                     .padding(6)
                     .frame(maxWidth: .infinity)
@@ -63,6 +63,11 @@ struct CategoryPickerView: View {
         }
         .padding(6)
         .frame(maxHeight: 200)
+        .onAppear {
+            if selectedId == nil, let first = categories.first {
+                selectedId = first.id
+            }
+        }
     }
 }
 

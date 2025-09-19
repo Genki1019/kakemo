@@ -7,16 +7,44 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CBC46B312E70704000DD538E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CBC46B302E70704000DD538E /* RealmSwift */; };
+		CB50951F2E7D075C0090C40E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB50951E2E7D075C0090C40E /* RealmSwift */; };
+		CB5095202E7D07920090C40E /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = CB50951E2E7D075C0090C40E /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CB5095162E7D054F0090C40E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CB5095202E7D07920090C40E /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		CBF3A9942E6AE9F8009CFE17 /* kakemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kakemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CB5095142E7C3EB20090C40E /* Exceptions for "kakemo" folder in "kakemo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CBF3A9932E6AE9F8009CFE17 /* kakemo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CBF3A9962E6AE9F8009CFE17 /* kakemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CB5095142E7C3EB20090C40E /* Exceptions for "kakemo" folder in "kakemo" target */,
+			);
 			path = kakemo;
 			sourceTree = "<group>";
 		};
@@ -27,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBC46B312E70704000DD538E /* RealmSwift in Frameworks */,
+				CB50951F2E7D075C0090C40E /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +96,7 @@
 				CBF3A9902E6AE9F8009CFE17 /* Sources */,
 				CBF3A9912E6AE9F8009CFE17 /* Frameworks */,
 				CBF3A9922E6AE9F8009CFE17 /* Resources */,
+				CB5095162E7D054F0090C40E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -78,7 +107,7 @@
 			);
 			name = kakemo;
 			packageProductDependencies = (
-				CBC46B302E70704000DD538E /* RealmSwift */,
+				CB50951E2E7D075C0090C40E /* RealmSwift */,
 			);
 			productName = kakemo;
 			productReference = CBF3A9942E6AE9F8009CFE17 /* kakemo.app */;
@@ -109,7 +138,7 @@
 			mainGroup = CBF3A98B2E6AE9F8009CFE17;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */,
+				CB50951B2E7D075C0090C40E /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CBF3A9952E6AE9F8009CFE17 /* Products */;
@@ -267,12 +296,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"kakemo/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BV5KLCP3S4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = kakemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,12 +329,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"kakemo/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BV5KLCP3S4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = kakemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -349,8 +380,8 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
-    isa = XCRemoteSwiftPackageReference;
+		CB50951B2E7D075C0090C40E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
 				branch = master;
@@ -360,9 +391,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CBC46B302E70704000DD538E /* RealmSwift */ = {
+		CB50951E2E7D075C0090C40E /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CBC46B2D2E70704000DD538E /* XCRemoteSwiftPackageReference "realm-swift" */;
+			package = CB50951B2E7D075C0090C40E /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
