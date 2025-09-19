@@ -81,6 +81,10 @@ struct ReportView: View {
                             let ratio = s.value / totalSum
                             if ratio >= 0.1 {
                                 Text(s.name)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.white)
+                                    .padding(2)
                             }
                         }
                 }
