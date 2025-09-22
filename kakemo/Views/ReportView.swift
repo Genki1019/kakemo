@@ -15,9 +15,13 @@ enum ChartType: String, CaseIterable {
 }
 
 struct ReportView: View {
+    @Binding var selectedMonth: Date
+    var onTapMonth: () -> Void
+    var onChangeMonth: (Int) -> Void
+    
     @ObservedResults(Expense.self) var expenses
+    
     @State private var selectedChart: ChartType = .category
-    @State private var selectedMonth: Date = Date()
     private let calendar = Calendar.current
     
     struct PieSlice {
@@ -49,7 +53,7 @@ struct ReportView: View {
     var body: some View {
         VStack {
             // ヘッダー
-            HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth)
+            HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth, onTapMonth: onTapMonth)
             
             HStack {
                 Text("合計支出: ")
@@ -161,6 +165,6 @@ struct ReportView: View {
 
 }
 
-#Preview {
-    ReportView()
-}
+//#Preview {
+//    ReportView()
+//}

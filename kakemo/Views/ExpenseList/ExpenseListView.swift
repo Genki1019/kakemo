@@ -9,16 +9,19 @@ import SwiftUI
 import RealmSwift
 
 struct ExpenseListView: View {
+    @Binding var selectedMonth: Date
+    var onTapMonth: () -> Void
+    var onChangeMonth: (Int) -> Void
+    
     @ObservedResults(Expense.self) var expenses
     
-    @State private var selectedMonth: Date = Date()
     private let calendar = Calendar.current
     
     var body: some View {
         NavigationView {
             VStack {
                 // ヘッダー
-                HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth)
+                HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth, onTapMonth: onTapMonth)
                 
                 // カレンダー
                 CalendarView(selectedMonth: selectedMonth, totals: dailyTotals(for: selectedMonth))
@@ -54,13 +57,13 @@ struct ExpenseListView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: ExpenseFormView()) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
+//            .toolbar {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    NavigationLink(destination: ExpenseFormView()) {
+//                        Image(systemName: "plus")
+//                    }
+//                }
+//            }
         }
     }
     
@@ -118,6 +121,6 @@ struct ExpenseListView: View {
     }
 }
 
-#Preview {
-    ExpenseListView()
-}
+//#Preview {
+//    ExpenseListView()
+//}

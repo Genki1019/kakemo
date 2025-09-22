@@ -9,6 +9,9 @@ import SwiftUI
 import RealmSwift
 
 struct ExpenseFormView: View {
+    @Binding var date: Date
+    var onTapDate: (() -> Void)? = nil
+    
     @Environment(\.dismiss) var dismiss
     
     var editingExpense: Expense?
@@ -16,7 +19,7 @@ struct ExpenseFormView: View {
     @ObservedResults(Category.self) var categories
     @ObservedResults(PaymentMethod.self) var paymentMethods
     
-    @State private var date: Date
+//    @State private var date: Date
     @State private var amount: Int
     @State private var amountText: String
     @State private var memo: String
@@ -26,9 +29,10 @@ struct ExpenseFormView: View {
     @FocusState private var isFocused: Bool
     @State private var isCompleted = false
     
-    init(editingExpense: Expense? = nil) {
+    init(editingExpense: Expense? = nil, date: Binding<Date>, onTapDate: (() -> Void)? = nil) {
         self.editingExpense = editingExpense
-        _date = State(initialValue: editingExpense?.date ?? Date())
+        self._date = date
+        self.onTapDate = onTapDate
         _amount = State(initialValue: editingExpense?.amount ?? 0)
         _amountText = State(initialValue: "\(editingExpense?.amount ?? 0)")
         _memo = State(initialValue: editingExpense?.memo ?? "")
@@ -50,8 +54,13 @@ struct ExpenseFormView: View {
                                 Image(systemName: "chevron.left")
                             }
                             Spacer()
-                            Text(date.dayTitleString)
-                                .font(.headline)
+                            Button {
+                                onTapDate?()
+                            } label: {
+                                Text(date.dayTitleString)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                            }
                             Spacer()
                             Button {
                                 date = Calendar.current.date(byAdding: .day, value: 1, to: date) ?? date
@@ -226,6 +235,6 @@ struct ExpenseFormView: View {
     }
 }
 
-#Preview {
-    ExpenseFormView()
-}
+//#Preview {
+//    ExpenseFormView()
+//}

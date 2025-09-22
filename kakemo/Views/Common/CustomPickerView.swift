@@ -1,0 +1,133 @@
+//
+//  CustomPickerView.swift
+//  kakemo
+//
+//  Created by Genki Yamamoto on 2025/09/20.
+//
+
+import SwiftUI
+
+enum PickerMode {
+    case date
+    case yearMonth
+}
+
+struct CustomPicker: View {
+    @Binding var showPicker: Bool
+    @Binding var savedDate: Date
+    let mode: PickerMode
+    
+    @State private var selectedDate: Date = Date()
+    @State private var selectedYear: Int
+    @State private var selectedMonth: Int
+    
+    @State private var selectedYearMonth: DateComponents
+    
+    private let years: [Int]
+    private let months = Array(1...12)
+    
+    init(showPicker: Binding<Bool>, savedDate: Binding<Date>, mode: PickerMode) {
+        _showPicker = showPicker
+        _savedDate = savedDate
+        self.mode = mode
+        
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: savedDate.wrappedValue)
+        let month = calendar.component(.month, from: savedDate.wrappedValue)
+        
+        _selectedDate = State(initialValue: savedDate.wrappedValue)
+        _selectedYear = State(initialValue: year)
+        _selectedMonth = State(initialValue: month)
+        _selectedYearMonth = State(initialValue: DateComponents(year: year, month: month))
+        
+        years = Array(2000...(year + 10))
+    }
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.3)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    withAnimation { showPicker = false }
+                }
+            
+            VStack {
+                Spacer()
+                
+                VStack {
+                    // ボタンバー
+                    HStack {
+                        Button("キャンセル") {
+                            withAnimation { showPicker = false }
+                        }
+                        .padding(.trailing, 30)
+                        Button(mode == .date ? "今日" : "今月") {
+                            let now = Date()
+                            let calendar = Calendar.current
+                            
+                            if mode == .date {
+                                selectedDate = now
+                            } else {
+                                selectedYear = calendar.component(.year, from: now)
+                                selectedMonth = calendar.component(.month, from: now)
+                            }
+                        }
+                        Spacer()
+                        Button("OK") {
+                            if mode == .date {
+                                savedDate = selectedDate
+                            } else {
+                                let calendar = Calendar.current
+                                if let newDate = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: 1)) {
+                                    savedDate = newDate
+                                }
+                            }
+                            withAnimation { showPicker = false }
+                        }
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 20)
+                    .background(Color(UIColor.systemGray6))
+                    
+                    // 中身
+                    if mode == .date {
+                        DatePicker(
+                            "",
+                            selection: $selectedDate,
+                            displayedComponents: [.date]
+                        )
+                        .datePickerStyle(.wheel)
+                        .labelsHidden()
+                        .frame(height: 200)
+                    } else {
+                        HStack(spacing: 0) {
+                            // 年
+                            Picker("", selection: $selectedYear) {
+                                ForEach(years, id: \.self) { year in
+                                    Text("\(String(year))年").tag(year)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .clipped()
+                            .pickerStyle(.wheel)
+                            
+                            // 月
+                            Picker("", selection: $selectedMonth) {
+                                ForEach(months, id: \.self) { month in
+                                    Text("\(month)月").tag(month)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .clipped()
+                            .pickerStyle(.wheel)
+                        }
+                        .frame(height: 200)
+                    }
+                }
+                .background(.white)
+                .transition(.move(edge: .bottom))
+                .animation(.easeInOut, value: showPicker)
+            }
+        }
+    }
+}
