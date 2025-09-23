@@ -57,13 +57,15 @@ struct ExpenseListView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(destination: ExpenseFormView()) {
-//                        Image(systemName: "plus")
-//                    }
-//                }
-//            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
+                        ExpenseFormView(date: $selectedMonth)
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
         }
     }
     

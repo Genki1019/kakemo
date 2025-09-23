@@ -19,7 +19,6 @@ struct ExpenseFormView: View {
     @ObservedResults(Category.self) var categories
     @ObservedResults(PaymentMethod.self) var paymentMethods
     
-//    @State private var date: Date
     @State private var amount: Int
     @State private var amountText: String
     @State private var memo: String
