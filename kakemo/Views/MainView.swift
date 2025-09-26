@@ -17,18 +17,19 @@ struct MainView: View {
     @State private var activeExpenseForm: Expense? = nil
     @State private var initialFormDate: Date = Date()
     @State private var showNewExpenseForm: Bool = false
+    @State private var selectedTab: Int = 0
     
     var body: some View {
         ZStack {
-            TabView {
+            TabView(selection: $selectedTab) {
                 ExpenseFormView(
                     onTapDate: { current, onSelected in
                         activePicker = .date(onSelected, current)
                     }
                 )
-                    .tabItem {
-                        Label("入力", systemImage: "pencil")
-                    }
+                .tabItem { Label("入力", systemImage: "pencil") }
+                .tag(0)
+                
                 ExpenseListView(
                     onTapMonth: { current, onSelected in
                         activePicker = .yearMonth(onSelected, current)
@@ -38,21 +39,25 @@ struct MainView: View {
                         initialFormDate = expense.date
                     }
                 )
-                    .tabItem {
-                        Label("カレンダー", systemImage: "calendar")
-                    }
+                .tabItem { Label("カレンダー", systemImage: "calendar") }
+                .tag(1)
+                
                 ReportView(
                     onTapMonth: { current, onSelected in
                         activePicker = .yearMonth(onSelected, current)
                     }
-                )                    .tabItem {
-                        Label("レポート", systemImage: "chart.pie")
-                    }
+                )
+                .tabItem { Label("レポート", systemImage: "chart.pie") }
+                .tag(2)
+                
                 MenuView()
-                    .tabItem {
-                        Label("メニュー", systemImage: "ellipsis")
-                    }
-                }
+                .tabItem { Label("メニュー", systemImage: "ellipsis") }
+                .tag(3)
+            }
+            .onChange(of: selectedTab) {
+                activeExpenseForm = nil
+                showNewExpenseForm = false
+            }
             
             // 新規/編集フォーム
             if showNewExpenseForm || activeExpenseForm != nil {
