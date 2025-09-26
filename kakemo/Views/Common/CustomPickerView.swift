@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum PickerMode {
+enum ActivePickerMode {
     case date
     case yearMonth
 }
@@ -15,21 +15,21 @@ enum PickerMode {
 struct CustomPicker: View {
     @Binding var showPicker: Bool
     @Binding var savedDate: Date
-    let mode: PickerMode
+    let mode: ActivePickerMode
+    var onSelected: ((Date) -> Void)? = nil
     
     @State private var selectedDate: Date = Date()
     @State private var selectedYear: Int
     @State private var selectedMonth: Int
     
-    @State private var selectedYearMonth: DateComponents
-    
     private let years: [Int]
     private let months = Array(1...12)
     
-    init(showPicker: Binding<Bool>, savedDate: Binding<Date>, mode: PickerMode) {
+    init(showPicker: Binding<Bool>, savedDate: Binding<Date>, mode: ActivePickerMode, onSelected: ((Date) -> Void)? = nil) {
         _showPicker = showPicker
         _savedDate = savedDate
         self.mode = mode
+        self.onSelected = onSelected
         
         let calendar = Calendar.current
         let year = calendar.component(.year, from: savedDate.wrappedValue)
@@ -38,7 +38,6 @@ struct CustomPicker: View {
         _selectedDate = State(initialValue: savedDate.wrappedValue)
         _selectedYear = State(initialValue: year)
         _selectedMonth = State(initialValue: month)
-        _selectedYearMonth = State(initialValue: DateComponents(year: year, month: month))
         
         years = Array(2000...(year + 10))
     }
@@ -76,10 +75,12 @@ struct CustomPicker: View {
                         Button("OK") {
                             if mode == .date {
                                 savedDate = selectedDate
+                                onSelected?(selectedDate)
                             } else {
                                 let calendar = Calendar.current
                                 if let newDate = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: 1)) {
                                     savedDate = newDate
+                                    onSelected?(newDate)
                                 }
                             }
                             withAnimation { showPicker = false }

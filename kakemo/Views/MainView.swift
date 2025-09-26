@@ -8,46 +8,44 @@
 import SwiftUI
 
 enum ActivePicker {
-    case date
-    case yearMonth
+    case date((Date) -> Void, Date)
+    case yearMonth((Date) -> Void, Date)
 }
 
 struct MainView: View {
     @State private var activePicker: ActivePicker? = nil
-    @State private var selectedDate: Date = Date()
+    @State private var activeExpenseForm: Expense? = nil
+    @State private var initialFormDate: Date = Date()
+    @State private var showNewExpenseForm: Bool = false
     
     var body: some View {
         ZStack {
             TabView {
                 ExpenseFormView(
-                    date: $selectedDate,
-                    onTapDate: { activePicker = .date }
+                    onTapDate: { current, onSelected in
+                        activePicker = .date(onSelected, current)
+                    }
                 )
                     .tabItem {
                         Label("入力", systemImage: "pencil")
                     }
                 ExpenseListView(
-                    selectedMonth: $selectedDate,
-                    onTapMonth: { activePicker = .yearMonth },
-                    onChangeMonth: { offset in
-                        if let newDate = Calendar.current.date(byAdding: .month, value: offset, to: selectedDate) {
-                            selectedDate = newDate
-                        }
+                    onTapMonth: { current, onSelected in
+                        activePicker = .yearMonth(onSelected, current)
+                    },
+                    onTapEdit: { expense in
+                        activeExpenseForm = expense
+                        initialFormDate = expense.date
                     }
                 )
                     .tabItem {
                         Label("カレンダー", systemImage: "calendar")
                     }
                 ReportView(
-                    selectedMonth: $selectedDate,
-                    onTapMonth: { activePicker = .yearMonth },
-                    onChangeMonth: { offset in
-                        if let newDate = Calendar.current.date(byAdding: .month, value: offset, to: selectedDate) {
-                            selectedDate = newDate
-                        }
+                    onTapMonth: { current, onSelected in
+                        activePicker = .yearMonth(onSelected, current)
                     }
-                )
-                    .tabItem {
+                )                    .tabItem {
                         Label("レポート", systemImage: "chart.pie")
                     }
                 MenuView()
@@ -55,21 +53,66 @@ struct MainView: View {
                         Label("メニュー", systemImage: "ellipsis")
                     }
                 }
-            if let picker = activePicker {
-                CustomPicker(
-                    showPicker: Binding(
-                        get: { activePicker != nil },
-                        set: { if !$0 { activePicker = nil } }
+            
+            // 新規/編集フォーム
+            if showNewExpenseForm || activeExpenseForm != nil {
+                ExpenseFormView(
+                    editingExpense: activeExpenseForm,
+                    initialDate: initialFormDate,
+                    showCloseButton: true,
+                    isPresented: Binding(
+                        get: { showNewExpenseForm || activeExpenseForm != nil },
+                        set: { value in
+                            if !value {
+                                showNewExpenseForm = false
+                                activeExpenseForm = nil
+                            }
+                        }
                     ),
-                    savedDate: $selectedDate,
-                    mode: picker == .date ? .date : .yearMonth
+                    onTapDate: { current, onSelected in
+                        activePicker = .date(onSelected, current)
+                    }
                 )
-                .zIndex(1)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.bottom, 80)
+                .edgesIgnoringSafeArea(.all)
+                .zIndex(2)
+            }
+            
+            // 日付/年月ピッカー
+            if let picker = activePicker {
+                switch picker {
+                case .date(let onSelected, let current):
+                    CustomPicker(
+                        showPicker: Binding(
+                            get: { activePicker != nil },
+                            set: { if !$0 { activePicker = nil } }
+                        ),
+                        savedDate: .constant(current),
+                        mode: .date,
+                        onSelected: { newDate in
+                            onSelected(newDate)
+                            activePicker = nil
+                        }
+                    )
+                    .zIndex(3)
+                    
+                case .yearMonth(let onSelected, let current):
+                    CustomPicker(
+                        showPicker: Binding(
+                            get: { activePicker != nil },
+                            set: { if !$0 { activePicker = nil } }
+                        ),
+                        savedDate: .constant(current),
+                        mode: .yearMonth,
+                        onSelected: { newDate in
+                            onSelected(newDate)
+                            activePicker = nil
+                        }
+                    )
+                    .zIndex(3)
+                }
             }
         }
     }
-}
-
-#Preview {
-    MainView()
 }

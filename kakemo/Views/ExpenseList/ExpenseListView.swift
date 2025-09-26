@@ -9,9 +9,10 @@ import SwiftUI
 import RealmSwift
 
 struct ExpenseListView: View {
-    @Binding var selectedMonth: Date
-    var onTapMonth: () -> Void
-    var onChangeMonth: (Int) -> Void
+    @State private var selectedMonth: Date = Date()
+    var onTapMonth: ((_ current: Date, _ onSelected: @escaping (Date) -> Void) -> Void)
+    
+    var onTapEdit: (Expense) -> Void
     
     @ObservedResults(Expense.self) var expenses
     
@@ -21,7 +22,19 @@ struct ExpenseListView: View {
         NavigationView {
             VStack {
                 // ヘッダー
-                HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth, onTapMonth: onTapMonth)
+                HeaderView(
+                    selectedMonth: selectedMonth,
+                    onChangeMonth: { offset in
+                        if let newDate = calendar.date(byAdding: .month, value: offset, to: selectedMonth) {
+                            selectedMonth = newDate
+                        }
+                    },
+                    onTapMonth: {
+                        onTapMonth(selectedMonth) { newDate in
+                            self.selectedMonth = newDate
+                        }
+                    }
+                )
                 
                 // カレンダー
                 CalendarView(selectedMonth: selectedMonth, totals: dailyTotals(for: selectedMonth))
@@ -51,27 +64,15 @@ struct ExpenseListView: View {
                                         }
                                     }
                                 }
+                            },
+                            onTapEdit: { expense in
+                                onTapEdit(expense)
                             }
                         )
                     }
                 }
             }
             .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {
-                        ExpenseFormView(date: $selectedMonth)
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
-        }
-    }
-    
-    private func changeMonth(by value: Int) {
-        if let newMonth = calendar.date(byAdding: .month, value: value, to: selectedMonth) {
-            selectedMonth = newMonth
         }
     }
     
@@ -122,7 +123,3 @@ struct ExpenseListView: View {
         return monthlyExpenses.reduce(0) { $0 + $1.amount }
     }
 }
-
-//#Preview {
-//    ExpenseListView()
-//}

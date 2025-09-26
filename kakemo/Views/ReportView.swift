@@ -15,9 +15,8 @@ enum ChartType: String, CaseIterable {
 }
 
 struct ReportView: View {
-    @Binding var selectedMonth: Date
-    var onTapMonth: () -> Void
-    var onChangeMonth: (Int) -> Void
+    @State private var selectedMonth: Date = Date()
+    var onTapMonth: ((_ current: Date, _ onSelected: @escaping (Date) -> Void) -> Void)
     
     @ObservedResults(Expense.self) var expenses
     
@@ -53,7 +52,19 @@ struct ReportView: View {
     var body: some View {
         VStack {
             // ヘッダー
-            HeaderView(selectedMonth: selectedMonth, onChangeMonth: changeMonth, onTapMonth: onTapMonth)
+            HeaderView(
+                selectedMonth: selectedMonth,
+                onChangeMonth: { offset in
+                    if let newDate = calendar.date(byAdding: .month, value: offset, to: selectedMonth) {
+                        selectedMonth = newDate
+                    }
+                },
+                onTapMonth: {
+                    onTapMonth(selectedMonth) { newDate in
+                        self.selectedMonth = newDate
+                    }
+                }
+            )
             
             HStack {
                 Text("合計支出: ")
@@ -121,12 +132,6 @@ struct ReportView: View {
         }
     }
     
-    private func changeMonth(by value: Int) {
-        if let newMonth = calendar.date(byAdding: .month, value: value, to: selectedMonth) {
-            selectedMonth = newMonth
-        }
-    }
-    
     private var monthlyTotal: Int {
         let calendar = Calendar.current
         guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: selectedMonth)),
@@ -164,7 +169,3 @@ struct ReportView: View {
     }
 
 }
-
-//#Preview {
-//    ReportView()
-//}

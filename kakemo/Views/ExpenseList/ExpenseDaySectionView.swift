@@ -12,14 +12,14 @@ struct ExpenseDaySectionView: View {
     let date: Date
     let items: [Expense]
     var onDelete: (IndexSet) -> Void
+    var onTapEdit: (Expense) -> Void
     
     var body: some View {
         Section(header: Text(date.dayTitleString)) {
             ForEach(items, id: \.id) { expense in
-                NavigationLink(destination: ExpenseFormView(
-                    editingExpense: expense,
-                    date: .constant(expense.date)
-                )) {
+                Button {
+                    onTapEdit(expense)
+                } label: {
                     expenseRow(expense)
                 }
             }
