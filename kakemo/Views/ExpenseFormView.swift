@@ -9,14 +9,16 @@ import SwiftUI
 import RealmSwift
 
 struct ExpenseFormView: View {
-    @Environment(\.dismiss) var dismiss
+    @State var date: Date = Date()
+    var onTapDate: ((_ current: Date, _ onSelected: @escaping (Date) -> Void) -> Void)? = nil
     
+    var showCloseButton: Bool
+    @Binding var isPresented: Bool
     var editingExpense: Expense?
     
     @ObservedResults(Category.self) var categories
     @ObservedResults(PaymentMethod.self) var paymentMethods
     
-    @State private var date: Date
     @State private var amount: Int
     @State private var amountText: String
     @State private var memo: String
@@ -26,14 +28,24 @@ struct ExpenseFormView: View {
     @FocusState private var isFocused: Bool
     @State private var isCompleted = false
     
-    init(editingExpense: Expense? = nil) {
+    init(editingExpense: Expense? = nil,
+         initialDate: Date = Date(),
+         showCloseButton: Bool = false,
+         isPresented: Binding<Bool>? = nil,
+         onTapDate: ((_ current: Date, _ onSelected: @escaping (Date) -> Void) -> Void)? = nil) {
+        
         self.editingExpense = editingExpense
-        _date = State(initialValue: editingExpense?.date ?? Date())
+        self.showCloseButton = showCloseButton
+        _date = State(initialValue: editingExpense?.date ?? initialDate)
+        self.onTapDate = onTapDate
+        
         _amount = State(initialValue: editingExpense?.amount ?? 0)
         _amountText = State(initialValue: "\(editingExpense?.amount ?? 0)")
         _memo = State(initialValue: editingExpense?.memo ?? "")
         _selectedCategoryId = State(initialValue: editingExpense?.category?.id)
         _selectedPaymentMethodId = State(initialValue: editingExpense?.paymentMethod?.id)
+        
+        _isPresented = isPresented ?? .constant(true)
     }
     
     var body: some View {
@@ -50,8 +62,15 @@ struct ExpenseFormView: View {
                                 Image(systemName: "chevron.left")
                             }
                             Spacer()
-                            Text(date.dayTitleString)
-                                .font(.headline)
+                            Button {
+                                onTapDate?(date) { newDate in
+                                    self.date = newDate
+                                }
+                            } label: {
+                                Text(date.dayTitleString)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                            }
                             Spacer()
                             Button {
                                 date = Calendar.current.date(byAdding: .day, value: 1, to: date) ?? date
@@ -165,6 +184,18 @@ struct ExpenseFormView: View {
                     .transition(.scale.combined(with: .opacity))
                 }
             }
+            .navigationBarItems(leading: closeButton)
+        }
+    }
+    
+    @ViewBuilder
+    private var closeButton: some View {
+        if showCloseButton {
+            Button(action: {
+                isPresented = false
+            }) {
+                Image(systemName: "chevron.left")
+            }
         }
     }
     
@@ -207,10 +238,7 @@ struct ExpenseFormView: View {
                 withAnimation {
                     isCompleted = false
                 }
-                // 編集モードのときは前の画面へ
-                if editingExpense != nil {
-                    dismiss()
-                } else {
+                if editingExpense == nil {
                     // 新規登録のときだけリセット
                     date = Date()
                     amount = 0
@@ -219,13 +247,10 @@ struct ExpenseFormView: View {
                     selectedCategoryId = nil
                     selectedPaymentMethodId = nil
                 }
+                isPresented = false
             }
         } catch {
             print("Realm error: \(error.localizedDescription)")
         }
     }
-}
-
-#Preview {
-    ExpenseFormView()
 }
