@@ -35,7 +35,10 @@ struct MenuView: View {
             }
             
             if showCalculator {
-                CalculatorInputView(showCalculator: $showCalculator) { result in
+                CalculatorInputView(
+                    showCalculator: $showCalculator,
+                    initialValue: Int(amountString) ?? 0
+                ) { result in
                     amountString = "\(result)"
                 }
                 .transition(.move(edge: .bottom))
