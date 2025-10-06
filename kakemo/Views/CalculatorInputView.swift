@@ -26,76 +26,89 @@ struct CalculatorInputView: View {
     private let columns = Array(repeating: GridItem(.flexible()), count: 5)
     
     var body: some View {
-        VStack {
-            HStack {
-                Button("税率 8%") {
-                    if let value = evaluateExpression() {
-                        let taxed = Int(Double(value) * 1.08)
-                        expression = "\(taxed)"
-                        onUpdate(taxed)
-                    }
-                }
-                .padding(.horizontal)
-                
-                Button("税率 10%") {
-                    if let value = evaluateExpression() {
-                        let taxed = Int(Double(value) * 1.1)
-                        expression = "\(taxed)"
-                        onUpdate(taxed)
-                    }
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-                
-                Button("閉じる") {
+        ZStack {
+            Color.clear
+                .ignoresSafeArea()
+                .contentShape(Rectangle())
+                .onTapGesture {
                     withAnimation { showCalculator = false }
                 }
-                .padding(.horizontal)
-            }
-            .padding()
-            .background(Color(UIColor.systemGray6))
-            
-            // 電卓ボタン
-            VStack(spacing: 8) {
-                HStack(spacing: 10) {
-                    calcButton("7")
-                    calcButton("8")
-                    calcButton("9")
-                    calcButton("÷")
-                    calcButton("AC")
-                }
+            VStack {
+                Spacer()
                 
-                HStack(spacing: 10) {
-                    calcButton("4")
-                    calcButton("5")
-                    calcButton("6")
-                    calcButton("×")
-                    calcButton("Del")
-                }
-                
-                HStack(alignment: .top, spacing: 10) {
-                    VStack(spacing: 10) {
-                        HStack(spacing: 10) {
-                            calcButton("1")
-                            calcButton("2")
-                            calcButton("3")
-                            calcButton("-")
+                VStack {
+                    HStack {
+                        Button("税率 8%") {
+                            if let value = evaluateExpression() {
+                                let taxed = Int(Double(value) * 1.08)
+                                expression = "\(taxed)"
+                                onUpdate(taxed)
+                            }
                         }
+                        .padding(.horizontal)
+                        
+                        Button("税率 10%") {
+                            if let value = evaluateExpression() {
+                                let taxed = Int(Double(value) * 1.1)
+                                expression = "\(taxed)"
+                                onUpdate(taxed)
+                            }
+                        }
+                        .padding(.horizontal)
+                        
+                        Spacer()
+                        
+                        Button("閉じる") {
+                            withAnimation { showCalculator = false }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    
+                    // 電卓ボタン
+                    VStack(spacing: 8) {
                         HStack(spacing: 10) {
-                            calcButton("0")
-                            calcButton("00", isWide: true)
-                            calcButton("+")
+                            calcButton("7")
+                            calcButton("8")
+                            calcButton("9")
+                            calcButton("÷")
+                            calcButton("AC")
+                        }
+                        
+                        HStack(spacing: 10) {
+                            calcButton("4")
+                            calcButton("5")
+                            calcButton("6")
+                            calcButton("×")
+                            calcButton("Del")
+                        }
+                        
+                        HStack(alignment: .top, spacing: 10) {
+                            VStack(spacing: 10) {
+                                HStack(spacing: 10) {
+                                    calcButton("1")
+                                    calcButton("2")
+                                    calcButton("3")
+                                    calcButton("-")
+                                }
+                                HStack(spacing: 10) {
+                                    calcButton("0")
+                                    calcButton("00", isWide: true)
+                                    calcButton("+")
+                                }
+                            }
+                            
+                            calcButton(showEqual ? "=" : "OK", isTall: true)
                         }
                     }
-                    
-                    calcButton(showEqual ? "=" : "OK", isTall: true)
+                    .background(Color.white)
                 }
+                .background(Color.white)
+                .transition(.move(edge: .bottom))
+                .animation(.easeInOut, value: showCalculator)
             }
-            .background(Color.white)
         }
-        .transition(.move(edge: .bottom))
-        .animation(.easeInOut, value: showCalculator)
     }
     
     // 共通ボタン

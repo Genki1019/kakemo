@@ -16,9 +16,14 @@ struct ExpenseFormView: View {
     @Binding var isPresented: Bool
     var editingExpense: Expense?
     
+    var onTapShowCalculator: (() -> Void)? = nil
+    var initialCalculatorValue: Int = 0
+    var onCalculatorUpdate: ((Int) -> Void)? = nil
+    
     @ObservedResults(Category.self) var categories
     @ObservedResults(PaymentMethod.self) var paymentMethods
     
+    @Binding var calculatorValue: Int
     @State private var amount: Int
     @State private var amountText: String
     @State private var memo: String
@@ -32,20 +37,28 @@ struct ExpenseFormView: View {
          initialDate: Date = Date(),
          showCloseButton: Bool = false,
          isPresented: Binding<Bool>? = nil,
-         onTapDate: ((_ current: Date, _ onSelected: @escaping (Date) -> Void) -> Void)? = nil) {
+         onTapDate: ((_ current: Date, _ onSelected: @escaping (Date) -> Void) -> Void)? = nil,
+         onTapShowCalculator: (() -> Void)? = nil,
+         calculatorValue: Binding<Int>,
+         onCalculatorUpdate: ((Int) -> Void)? = nil
+    ) {
         
         self.editingExpense = editingExpense
         self.showCloseButton = showCloseButton
         _date = State(initialValue: editingExpense?.date ?? initialDate)
         self.onTapDate = onTapDate
         
-        _amount = State(initialValue: editingExpense?.amount ?? 0)
-        _amountText = State(initialValue: "\(editingExpense?.amount ?? 0)")
+        self._calculatorValue = calculatorValue
+        _amount = State(initialValue: editingExpense?.amount ?? calculatorValue.wrappedValue)
+        _amountText = State(initialValue: "\(editingExpense?.amount ?? calculatorValue.wrappedValue)")
         _memo = State(initialValue: editingExpense?.memo ?? "")
         _selectedCategoryId = State(initialValue: editingExpense?.category?.id)
         _selectedPaymentMethodId = State(initialValue: editingExpense?.paymentMethod?.id)
         
         _isPresented = isPresented ?? .constant(true)
+        
+        self.onTapShowCalculator = onTapShowCalculator
+        self.onCalculatorUpdate = onCalculatorUpdate
     }
     
     var body: some View {
@@ -90,22 +103,26 @@ struct ExpenseFormView: View {
                             TextField("", text: Binding(
                                 get: { amountText },
                                 set: { newValue in
-                                    // 入力値から数字だけを抽出
                                     let filtered = newValue.filter { $0.isNumber }
                                     amountText = filtered
                                     
-                                    // 数字があれば Int に反映
                                     if let value = Int(filtered) {
                                         amount = value
+                                        calculatorValue = value
                                     } else {
                                         amount = 0
+                                        calculatorValue = 0
                                     }
+                                    onCalculatorUpdate?(amount)
                                 }
                             ))
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.leading)
                             .font(.title)
                             .focused($isFocused)
+                            .simultaneousGesture(TapGesture().onEnded {
+                                onTapShowCalculator?()
+                            })
                             .onChange(of: isFocused) {
                                 if isFocused {
                                     if amount == 0 {
@@ -120,6 +137,10 @@ struct ExpenseFormView: View {
                             }
                             
                             Text("円")
+                        }
+                        .onChange(of: calculatorValue) {
+                            amount = calculatorValue
+                            amountText = "\(calculatorValue)"
                         }
                         .padding(.horizontal)
                         

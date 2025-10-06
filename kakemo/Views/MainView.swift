@@ -17,6 +17,8 @@ struct MainView: View {
     @State private var activeExpenseForm: Expense? = nil
     @State private var initialFormDate: Date = Date()
     @State private var showNewExpenseForm: Bool = false
+    @State private var showCalculator: Bool = false
+    @State private var calculatorValue: Int = 0
     @State private var selectedTab: Int = 0
     
     var body: some View {
@@ -25,6 +27,13 @@ struct MainView: View {
                 ExpenseFormView(
                     onTapDate: { current, onSelected in
                         activePicker = .date(onSelected, current)
+                    },
+                    onTapShowCalculator: {
+                        showCalculator = true
+                    },
+                    calculatorValue: $calculatorValue,
+                    onCalculatorUpdate: { newValue in
+                        calculatorValue = newValue
                     }
                 )
                 .tabItem { Label("入力", systemImage: "pencil") }
@@ -76,6 +85,13 @@ struct MainView: View {
                     ),
                     onTapDate: { current, onSelected in
                         activePicker = .date(onSelected, current)
+                    },
+                    onTapShowCalculator: {
+                        showCalculator = true
+                    },                    
+                    calculatorValue: $calculatorValue,
+                    onCalculatorUpdate: { newValue in
+                        calculatorValue = newValue
                     }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -117,6 +133,17 @@ struct MainView: View {
                     )
                     .zIndex(3)
                 }
+            }
+            
+            if showCalculator {
+                CalculatorInputView(
+                    showCalculator: $showCalculator,
+                    initialValue: calculatorValue,
+                    onUpdate: { newValue in
+                        calculatorValue = newValue
+                    }
+                )
+                .zIndex(4)
             }
         }
     }
