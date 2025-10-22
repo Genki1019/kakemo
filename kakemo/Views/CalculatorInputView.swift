@@ -16,6 +16,8 @@ struct CalculatorInputView: View {
     @State private var showEqual: Bool = false
     @State private var selectedOperator: String? = nil
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     init(showCalculator: Binding<Bool>, initialValue: Int, onUpdate: @escaping (Int) -> Void) {
         self._showCalculator = showCalculator
         self.initialValue = initialValue
@@ -33,10 +35,12 @@ struct CalculatorInputView: View {
                 .onTapGesture {
                     withAnimation { showCalculator = false }
                 }
+            
             VStack {
                 Spacer()
                 
                 VStack {
+                    // 税率・閉じるボタンバー
                     HStack {
                         Button("税率 8%") {
                             if let value = evaluateExpression() {
@@ -64,7 +68,7 @@ struct CalculatorInputView: View {
                         .padding(.horizontal)
                     }
                     .padding()
-                    .background(Color(UIColor.systemGray6))
+                    .background(Color(colorScheme == .dark ? UIColor.systemGray5 : UIColor.systemGray6))
                     
                     // 電卓ボタン
                     VStack(spacing: 8) {
@@ -102,9 +106,9 @@ struct CalculatorInputView: View {
                             calcButton(showEqual ? "=" : "OK", isTall: true)
                         }
                     }
-                    .background(Color.white)
+                    .background(colorScheme == .dark ? Color.black : Color.white)
                 }
-                .background(Color.white)
+                .background(colorScheme == .dark ? Color.black : Color.white)
                 .transition(.move(edge: .bottom))
                 .animation(.easeInOut, value: showCalculator)
             }
@@ -120,18 +124,20 @@ struct CalculatorInputView: View {
         
         let bgColor: Color = {
             if isOperator {
-                return selectedOperator == label ? .blue.opacity(0.8) : Color(.systemGray5)
+                return selectedOperator == label
+                ? (colorScheme == .dark ? Color.blue.opacity(0.9) : .blue.opacity(0.8))
+                : (colorScheme == .dark ? Color(.systemGray6) : Color(.systemGray5))
             }
-            return Color(.systemGray5)
+            return colorScheme == .dark ? Color(.systemGray6) : Color(.systemGray5)
         }()
         
         let textColor: Color = {
             if isDel { return .red }
             if isOK { return .blue }
             if isOperator {
-                return selectedOperator == label ? .white : Color(.darkGray)
+                return selectedOperator == label ? .white : (colorScheme == .dark ? .white : Color(.darkGray))
             }
-            return Color(.darkGray)
+            return colorScheme == .dark ? .white : Color(.darkGray)
         }()
         
         Button(action: { handleInput(label) }) {

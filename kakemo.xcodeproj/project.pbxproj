@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CB60AAAD2E8C0A8F00891562 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB60AAAC2E8C0A8F00891562 /* RealmSwift */; };
+		CB3B71612EA910F50067784E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB3B71602EA910F50067784E /* RealmSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB60AAAD2E8C0A8F00891562 /* RealmSwift in Frameworks */,
+				CB3B71612EA910F50067784E /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,7 +105,7 @@
 			);
 			name = kakemo;
 			packageProductDependencies = (
-				CB60AAAC2E8C0A8F00891562 /* RealmSwift */,
+				CB3B71602EA910F50067784E /* RealmSwift */,
 			);
 			productName = kakemo;
 			productReference = CBF3A9942E6AE9F8009CFE17 /* kakemo.app */;
@@ -136,7 +136,7 @@
 			mainGroup = CBF3A98B2E6AE9F8009CFE17;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				CB60AAAB2E8C0A8F00891562 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				CB3B715F2EA910F50067784E /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CBF3A9952E6AE9F8009CFE17 /* Products */;
@@ -304,8 +304,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -337,8 +336,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -378,7 +376,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CB60AAAB2E8C0A8F00891562 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+		CB3B715F2EA910F50067784E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
@@ -389,9 +387,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CB60AAAC2E8C0A8F00891562 /* RealmSwift */ = {
+		CB3B71602EA910F50067784E /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB60AAAB2E8C0A8F00891562 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			package = CB3B715F2EA910F50067784E /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

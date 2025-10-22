@@ -102,9 +102,3 @@ struct CategoryListView: View {
         }
     }
 }
-
-#Preview {
-    NavigationStack {
-        CategoryListView()
-    }
-}
