@@ -1,10 +1,3 @@
-//
-//  CustomPickerView.swift
-//  kakemo
-//
-//  Created by Genki Yamamoto on 2025/09/20.
-//
-
 import SwiftUI
 
 enum ActivePickerMode {
@@ -24,6 +17,8 @@ struct CustomPicker: View {
     
     private let years: [Int]
     private let months = Array(1...12)
+    
+    @Environment(\.colorScheme) private var colorScheme
     
     init(showPicker: Binding<Bool>, savedDate: Binding<Date>, mode: ActivePickerMode, onSelected: ((Date) -> Void)? = nil) {
         _showPicker = showPicker
@@ -60,6 +55,7 @@ struct CustomPicker: View {
                             withAnimation { showPicker = false }
                         }
                         .padding(.trailing, 30)
+                        
                         Button(mode == .date ? "今日" : "今月") {
                             let now = Date()
                             let calendar = Calendar.current
@@ -71,7 +67,9 @@ struct CustomPicker: View {
                                 selectedMonth = calendar.component(.month, from: now)
                             }
                         }
+                        
                         Spacer()
+                        
                         Button("OK") {
                             if mode == .date {
                                 savedDate = selectedDate
@@ -89,8 +87,9 @@ struct CustomPicker: View {
                     .padding(.vertical, 10)
                     .padding(.horizontal, 20)
                     .background(Color(UIColor.systemGray6))
+                    .foregroundColor(colorScheme == .dark ? .white : .primary)
                     
-                    // 中身
+                    // ピッカー本体
                     if mode == .date {
                         DatePicker(
                             "",
@@ -102,7 +101,6 @@ struct CustomPicker: View {
                         .frame(height: 200)
                     } else {
                         HStack(spacing: 0) {
-                            // 年
                             Picker("", selection: $selectedYear) {
                                 ForEach(years, id: \.self) { year in
                                     Text("\(String(year))年").tag(year)
@@ -112,7 +110,6 @@ struct CustomPicker: View {
                             .clipped()
                             .pickerStyle(.wheel)
                             
-                            // 月
                             Picker("", selection: $selectedMonth) {
                                 ForEach(months, id: \.self) { month in
                                     Text("\(month)月").tag(month)
@@ -125,7 +122,7 @@ struct CustomPicker: View {
                         .frame(height: 200)
                     }
                 }
-                .background(.white)
+                .background(colorScheme == .dark ? Color.black : Color.white)
                 .transition(.move(edge: .bottom))
                 .animation(.easeInOut, value: showPicker)
             }

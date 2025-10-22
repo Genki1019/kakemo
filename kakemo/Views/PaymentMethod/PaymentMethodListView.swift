@@ -102,9 +102,3 @@ struct PaymentMethodListView: View {
         }
     }
 }
-
-#Preview {
-    NavigationStack {
-        PaymentMethodListView()
-    }
-}

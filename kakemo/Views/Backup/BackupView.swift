@@ -114,8 +114,3 @@ struct BackupView: View {
         return text
     }
 }
-
-
-#Preview {
-    BackupView()
-}
